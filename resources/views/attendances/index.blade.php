@@ -15,9 +15,9 @@
             <button type="button" class="btn btn-success rounded-3 px-4 py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="bi bi-upload me-1"></i> Import Sidik Jari
             </button>
-            <a href="{{ route('attendances.create') }}" class="btn btn-success rounded-3 px-4 py-2 fw-semibold">
-                <i class="bi bi-plus-lg me-1"></i> Catat Presensi
-            </a>
+           <a href="{{ route('presensi.create') }}" class="btn btn-success rounded-3 px-4 py-2 fw-semibold">
+    <i class="bi bi-plus-lg me-1"></i> Catat Presensi
+</a>
         </div>
     </div>
 

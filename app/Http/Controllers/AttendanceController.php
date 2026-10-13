@@ -51,7 +51,7 @@ class AttendanceController extends Controller
             ['status' => $data['status'], 'keterangan' => $data['keterangan'] ?? null]
         );
 
-        return redirect()->route('presensi.index', ['tanggal' => $data['tanggal']])
+        return redirect()->route('attendances.index')
             ->with('success', 'Presensi berhasil disimpan!');
     }
 
@@ -69,7 +69,7 @@ class AttendanceController extends Controller
         $data = $this->validated($request);
         $attendance->update($data);
 
-        return redirect()->route('presensi.index', ['tanggal' => $data['tanggal']])
+        return redirect()->route('attendances.index')
             ->with('success', 'Presensi berhasil diperbarui!');
     }
 
@@ -78,7 +78,7 @@ class AttendanceController extends Controller
         $tanggal = $attendance->tanggal?->format('Y-m-d');
         $attendance->delete();
 
-        return redirect()->route('presensi.index', ['tanggal' => $tanggal])
+        return redirect()->route('attendances.index', ['tanggal' => $tanggal])
             ->with('success', 'Presensi berhasil dihapus!');
     }
 
@@ -98,7 +98,7 @@ class AttendanceController extends Controller
             foreach ($rows as $r) {
                 fputcsv($out, [
                     $r->tanggal?->format('d/m/Y'),
-                    $r->student->nisN ?? '',
+                    $r->student->nisn ?? '',
                     $r->student->name ?? '',
                     $r->student->class ?? '',
                     $r->status,
