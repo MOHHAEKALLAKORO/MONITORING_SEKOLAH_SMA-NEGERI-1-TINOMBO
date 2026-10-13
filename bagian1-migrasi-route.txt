@@ -1,0 +1,609 @@
+﻿
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\0001_01_01_000000_create_users_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
+    }
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\0001_01_01_000001_create_cache_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('cache', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->mediumText('value');
+            $table->integer('expiration')->index();
+        });
+
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
+            $table->integer('expiration')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('cache');
+        Schema::dropIfExists('cache_locks');
+    }
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\0001_01_01_000002_create_jobs_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('jobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('queue')->index();
+            $table->longText('payload');
+            $table->unsignedTinyInteger('attempts');
+            $table->unsignedInteger('reserved_at')->nullable();
+            $table->unsignedInteger('available_at');
+            $table->unsignedInteger('created_at');
+        });
+
+        Schema::create('job_batches', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('name');
+            $table->integer('total_jobs');
+            $table->integer('pending_jobs');
+            $table->integer('failed_jobs');
+            $table->longText('failed_job_ids');
+            $table->mediumText('options')->nullable();
+            $table->integer('cancelled_at')->nullable();
+            $table->integer('created_at');
+            $table->integer('finished_at')->nullable();
+        });
+
+        Schema::create('failed_jobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('uuid')->unique();
+            $table->text('connection');
+            $table->text('queue');
+            $table->longText('payload');
+            $table->longText('exception');
+            $table->timestamp('failed_at')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('job_batches');
+        Schema::dropIfExists('failed_jobs');
+    }
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_063624_create_students_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+   public function up(): void
+{
+    Schema::create('students', function (Blueprint $table) {
+        $table->id();
+        $table->string('nisn')->unique();
+        $table->string('name');
+        $table->string('class'); // Kelas siswa, misal: X RPL 1
+        $table->string('parent_phone'); // Nomor WhatsApp orang tua/wali
+        $table->timestamps();
+    });
+}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('students');
+    }
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_064126_create_attendances_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+ public function up(): void
+{
+    Schema::create('attendances', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+        $table->date('tanggal');
+        $table->enum('status', ['Hadir', 'Sakit', 'Izin', 'Alpa']);
+        $table->text('keterangan')->nullable();
+        $table->timestamps();
+    });
+}
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('attendances');
+    }
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_093633_create_subjects_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('subjects', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_mapel')->unique();
+            $table->string('nama_mapel');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('subjects');
+    }
+};
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_093653_create_academic_years_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+   public function up(): void
+{
+    Schema::create('academic_years', function (Blueprint $table) {
+        $table->id();
+        $table->string('tahun_ajaran'); // Contoh: 2026/2027
+        $table->enum('semester', ['Ganjil', 'Genap']);
+        $table->boolean('is_active')->default(false);
+        $table->timestamps();
+    });
+}
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_093705_create_grades_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('grades', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->foreignId('academic_year_id')->constrained('academic_years')->onDelete('cascade');
+            
+            $table->decimal('nilai_tugas', 5, 2)->default(0);
+            $table->decimal('nilai_uts', 5, 2)->default(0);
+            $table->decimal('nilai_uas', 5, 2)->default(0);
+            $table->decimal('nilai_akhir', 5, 2)->default(0);
+            $table->string('predikat')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('grades');
+    }
+};
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_120801_create_schedules_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+{
+    Schema::create('schedules', function (Blueprint $table) {
+        $table->id();
+        $table->string('hari'); // Senin, Selasa, dll.
+        $table->time('jam_mulai');
+        $table->time('jam_selesai');
+        $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+        $table->string('kelas'); // Contoh: X IPA 1, XI IPS 2
+        $table->string('ruangan')->nullable(); // Contoh: R. 03
+        $table->timestamps();
+    });
+}
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_122629_create_counselings_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+{
+    Schema::create('counselings', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+        $table->date('tanggal');
+        $table->enum('jenis', ['Prestasi', 'Pelanggaran', 'Konseling']);
+        $table->text('deskripsi');
+        $table->integer('poin')->default(0); // Positif untuk prestasi, negatif/positif untuk pelanggaran
+        $table->string('tindak_lanjut')->nullable();
+        $table->timestamps();
+    });
+}
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_05_125334_create_extracurriculars_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+   public function up(): void
+{
+    Schema::create('extracurriculars', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+        $table->string('nama_ekskul'); // Contoh: Pramuka, Paskibra, Futsal, Basket
+        $table->string('jabatan')->nullable(); // Contoh: Ketua, Anggota
+        $table->string('tahun_ajaran');
+        $table->text('keterangan')->nullable();
+        $table->timestamps();
+    });
+}
+};
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_09_120000_create_whatsapp_logs_table.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('whatsapp_logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('recipient_name');
+            $table->string('phone');
+            $table->string('type');                         // kategori pesan
+            $table->text('message');
+            $table->string('status')->default('Menunggu');  // Berhasil | Gagal | Menunggu
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('whatsapp_logs');
+    }
+};
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\database\migrations\2026_10_09_130000_add_role_and_create_forum_tables.php =====
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (!Schema::hasTable('forum_topics')) {
+            Schema::create('forum_topics', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('content');
+                $table->string('category')->nullable();
+                $table->boolean('is_pinned')->default(false);
+                $table->timestamps();
+            });
+        }
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('forum_topics');
+    }
+};
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\routes\console.php =====
+
+<?php
+
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
+
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})->purpose('Display an inspiring quote');
+
+
+===== C:\Users\PKBM PUNSU JAYA\monitoring-sekolah\routes\web.php =====
+
+<?php
+
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AttendanceController;
+Route::get('presensi/export', [AttendanceController::class, 'export'])->name('presensi.export');
+ 
+Route::resource('presensi', AttendanceController::class)
+    ->except('show')
+    ->names('presensi')
+    ->parameters(['presensi' => 'attendance']);
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\AcademicController;
+use App\Http\Controllers\AcademicSettingController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\CounselingController;
+Route::resource('jadwal', ScheduleController::class)
+    ->except('show')
+    ->names('schedules')
+    ->parameters(['jadwal' => 'schedule']);
+
+Route::resource('buku-bk', CounselingController::class)
+    ->names('counselings')
+    ->parameters(['buku-bk' => 'counseling']);
+ 
+use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\WhatsAppLogController;
+use App\Http\Controllers\ReportCardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\EnsureAdmin;
+
+// --- Login / Logout ---
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Rute Utama / Dashboard
+Route::get('/', [StudentController::class, 'dashboard']);
+Route::get('/dashboard', [StudentController::class, 'dashboard']);
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+ 
+// --- Forum (wajib login) ---
+Route::middleware('auth')->prefix('forum')->name('forum.')->group(function () {
+    Route::get('/', [ForumController::class, 'index'])->name('index');
+    Route::get('/buat', [ForumController::class, 'create'])->name('create');
+    Route::post('/', [ForumController::class, 'store'])->name('store');
+    Route::delete('/balasan/{reply}', [ForumController::class, 'destroyReply'])->name('reply.destroy');
+    Route::get('/{topic}', [ForumController::class, 'show'])->name('show');
+    Route::delete('/{topic}', [ForumController::class, 'destroy'])->name('destroy');
+    Route::post('/{topic}/pin', [ForumController::class, 'togglePin'])->name('pin');
+    Route::post('/{topic}/balas', [ForumController::class, 'reply'])->name('reply');
+});
+ 
+// --- Kelola Pengguna (khusus admin) ---
+Route::resource('pengguna', UserController::class)
+    ->except('show')
+    ->names('users')
+    ->parameters(['pengguna' => 'user'])
+    ->middleware(['auth', EnsureAdmin::class]);
+
+
+// Rute Data Siswa & Presensi (yang sudah ada)
+Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+Route::get('/students/create', [StudentController::class, 'create']);
+Route::post('/students', [StudentController::class, 'store']);
+Route::resource('jadwal', ScheduleController::class)
+    ->except('show')
+    ->names('schedules')
+    ->parameters(['jadwal' => 'schedule']);
+// Rute tambahan untuk mendukung akses /attendances
+Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.list');
+// Rute untuk Menu Baru di Sidebar (Halaman Sementara/Placeholder)
+Route::get('/akademik', [AcademicController::class, 'index'])->name('academic.index');
+Route::post('/akademik', [AcademicController::class, 'store'])->name('academic.store');
+Route::get('/akademik/create', [AcademicController::class, 'create'])->name('Akademik.create');
+Route::get('/buku-bk', function () { return view('placeholder', ['title' => 'Buku Penghubung BK']); });
+Route::get('/ekskul', function () { return view('placeholder', ['title' => 'Ekskul & Prestasi']); });
+Route::get('/laporan', function () { return view('placeholder', ['title' => 'Laporan Bulanan']); });
+Route::get('/log-wa', function () { return view('placeholder', ['title' => 'Log WhatsApp']); });
+Route::get('/rapor', function () { return view('placeholder', ['title' => 'Rapor Semester']); });
+Route::get('/pengaturan', function () { return view('placeholder', ['title' => 'Pengaturan Akun']); });
+
+
+// Rute Pengaturan Akademik (Mapel & Tahun Ajaran)
+Route::get('/akademik/pengaturan', [AcademicSettingController::class, 'index'])->name('academic.settings');
+Route::post('/akademik/mapel', [AcademicSettingController::class, 'storeSubject'])->name('subjects.store');
+Route::delete('/akademik/mapel/{id}', [AcademicSettingController::class, 'destroySubject'])->name('subjects.destroy');
+Route::post('/akademik/tahun-ajaran', [AcademicSettingController::class, 'storeAcademicYear'])->name('academic_years.store');
+Route::delete('/akademik/tahun-ajaran/{id}', [AcademicSettingController::class, 'destroyAcademicYear'])->name('academic_years.destroy');
+
+
+
+
+Route::get('/buku-bk', [CounselingController::class, 'index'])->name('counselings.index');
+Route::resource('buku-bk', CounselingController::class)
+    ->names('counselings')
+    ->parameters(['buku-bk' => 'counseling']);
+
+// Rute Ekstrakurikuler & Prestasi
+Route::get('/ekskul', [ExtracurricularController::class, 'index'])->name('extracurriculars.index');
+Route::post('/ekskul', [ExtracurricularController::class, 'store'])->name('extracurriculars.store');
+Route::delete('/ekskul/{id}', [ExtracurricularController::class, 'destroy'])->name('extracurriculars.destroy');
+
+
+
+
+// Rute Laporan Bulanan
+Route::get('/laporan-bulanan', [ReportController::class, 'index'])->name('reports.index');
+// Rute Laporan Bulanan (Mendukung /laporan dan /laporan-bulanan)
+Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/laporan-bulanan', [ReportController::class, 'index']);
+
+Route::get('/log-whatsapp', [WhatsAppLogController::class, 'index'])->name('whatsapp.logs');
+Route::post('/log-whatsapp', [WhatsAppLogController::class, 'store'])->name('whatsapp.logs.store');
+
+
+// Rute Raport Semester yang mengarah ke Controller
+Route::get('/raport', [ReportCardController::class, 'index'])->name('report-cards.index');
+Route::get('/raport-semester', [ReportCardController::class, 'index']);
+Route::get('/raport-semester/{id}', [ReportCardController::class, 'show'])->name('report-cards.show');
+
+// Rute Pengaturan Akun
+Route::get('/pengaturan', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/pengaturan-akun', [ProfileController::class, 'index']);
+Route::post('/pengaturan', [ProfileController::class, 'update'])->name('profile.update');

@@ -1,0 +1,186 @@
+/* ==========================================================
+   TEMA GELAP - E-Monitoring SMA Negeri 1 Tinombo
+   Aktif bila <html> memiliki atribut data-bs-theme="dark".
+   Untuk kembali ke tema terang: hapus atribut itu (atau
+   hapus baris <link> yang memuat file ini).
+   ========================================================== */
+
+[data-bs-theme="dark"] {
+    --tg-bg: #0b1410;          /* latar halaman */
+    --tg-side: #0e1a14;        /* sidebar & bar atas */
+    --tg-surface: #13211a;     /* kartu */
+    --tg-surface-2: #1a2c23;   /* kotak sekunder, kepala tabel */
+    --tg-border: #25402f;
+    --tg-text: #e6efe9;
+    --tg-muted: #93ab9d;
+
+    --bs-body-bg: var(--tg-bg);
+    --bs-body-color: var(--tg-text);
+    --bs-border-color: var(--tg-border);
+    --bs-secondary-color: var(--tg-muted);
+    --bs-tertiary-bg: var(--tg-surface-2);
+    --bs-link-color-rgb: 74, 222, 128;
+    --bs-link-hover-color-rgb: 134, 239, 172;
+    color-scheme: dark;
+}
+
+/* ---------- Latar & kerangka ---------- */
+[data-bs-theme="dark"] body {
+    background-color: var(--tg-bg) !important;
+    background-image: radial-gradient(1200px 500px at 85% -10%, rgba(25, 135, 84, 0.16), transparent 60%);
+    background-attachment: fixed;
+}
+[data-bs-theme="dark"] #content,
+[data-bs-theme="dark"] #content > main {
+    background: transparent !important;
+}
+[data-bs-theme="dark"] #sidebar {
+    background-color: var(--tg-side) !important;
+    border-right: 1px solid var(--tg-border) !important;
+}
+[data-bs-theme="dark"] #sidebar ul.components li a:hover {
+    background-color: var(--tg-surface-2) !important;
+}
+[data-bs-theme="dark"] .navbar {
+    background-color: var(--tg-side) !important;
+    border-bottom: 1px solid var(--tg-border);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ---------- Kartu & permukaan ---------- */
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .bg-white {
+    background-color: var(--tg-surface) !important;
+}
+[data-bs-theme="dark"] .card {
+    --bs-card-bg: var(--tg-surface);
+    border-color: var(--tg-border) !important;
+}
+[data-bs-theme="dark"] .rounded-circle.bg-white {
+    background-color: #ffffff !important;   /* titik kecil di sidebar tetap putih */
+}
+[data-bs-theme="dark"] .bg-light,
+[data-bs-theme="dark"] .bg-light-subtle {
+    background-color: var(--tg-surface-2) !important;
+}
+[data-bs-theme="dark"] .shadow-sm,
+[data-bs-theme="dark"] .shadow {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40) !important;
+}
+
+/* ---------- Teks ---------- */
+[data-bs-theme="dark"] .text-dark { color: var(--tg-text) !important; }
+[data-bs-theme="dark"] .text-success { color: #4ade80 !important; }
+[data-bs-theme="dark"] .text-primary { color: #6ea8fe !important; }
+[data-bs-theme="dark"] .text-danger  { color: #f08a93 !important; }
+
+/* Tombol/lencana kuning tetap bertulisan gelap agar terbaca */
+[data-bs-theme="dark"] .btn-warning,
+[data-bs-theme="dark"] .btn-warning.text-dark,
+[data-bs-theme="dark"] .badge.bg-warning,
+[data-bs-theme="dark"] .badge.bg-warning.text-dark {
+    color: #1a1300 !important;
+}
+
+/* ---------- Tombol ---------- */
+[data-bs-theme="dark"] .btn-light {
+    --bs-btn-color: var(--tg-text);
+    --bs-btn-bg: var(--tg-surface-2);
+    --bs-btn-border-color: var(--tg-border);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #223a2e;
+    --bs-btn-hover-border-color: #2f5441;
+    --bs-btn-active-bg: #223a2e;
+    --bs-btn-active-color: #ffffff;
+}
+[data-bs-theme="dark"] .btn-outline-secondary {
+    --bs-btn-color: var(--tg-muted);
+    --bs-btn-border-color: var(--tg-border);
+    --bs-btn-hover-bg: var(--tg-surface-2);
+    --bs-btn-hover-color: var(--tg-text);
+}
+
+/* ---------- Tabel ---------- */
+[data-bs-theme="dark"] .table {
+    --bs-table-color: var(--tg-text);
+    --bs-table-bg: transparent;
+    --bs-table-border-color: var(--tg-border);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.045);
+    --bs-table-hover-color: #ffffff;
+}
+[data-bs-theme="dark"] .table-light {
+    --bs-table-bg: var(--tg-surface-2);
+    --bs-table-color: var(--tg-muted);
+    --bs-table-border-color: var(--tg-border);
+    --bs-table-hover-bg: var(--tg-surface-2);
+    --bs-table-hover-color: var(--tg-muted);
+}
+
+/* ---------- Formulir ---------- */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] .input-group-text {
+    background-color: #0f1b15;
+    border-color: var(--tg-border);
+    color: var(--tg-text);
+}
+[data-bs-theme="dark"] .form-control::placeholder { color: #6f877a; }
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+    background-color: #12231a;
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.28);
+}
+[data-bs-theme="dark"] .form-control[readonly] { background-color: var(--tg-surface-2) !important; }
+[data-bs-theme="dark"] .form-text { color: var(--tg-muted); }
+
+/* ---------- Dropdown, modal, daftar ---------- */
+[data-bs-theme="dark"] .dropdown-menu {
+    --bs-dropdown-bg: var(--tg-surface-2);
+    --bs-dropdown-border-color: var(--tg-border);
+    --bs-dropdown-link-color: var(--tg-text);
+    --bs-dropdown-link-hover-bg: #223a2e;
+    --bs-dropdown-link-hover-color: #ffffff;
+    --bs-dropdown-divider-bg: var(--tg-border);
+}
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--tg-surface);
+    border: 1px solid var(--tg-border);
+}
+[data-bs-theme="dark"] .list-group {
+    --bs-list-group-bg: transparent;
+    --bs-list-group-color: var(--tg-text);
+    --bs-list-group-border-color: var(--tg-border);
+    --bs-list-group-action-hover-bg: var(--tg-surface-2);
+    --bs-list-group-action-hover-color: #ffffff;
+}
+
+/* ---------- Scrollbar ---------- */
+[data-bs-theme="dark"] ::-webkit-scrollbar { width: 10px; height: 10px; }
+[data-bs-theme="dark"] ::-webkit-scrollbar-track { background: var(--tg-bg); }
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #25402f; border-radius: 8px; }
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2f5441; }
+
+/* ---------- Menu sidebar: disamakan dengan banner (kartu gelap + teks kuning) ---------- */
+[data-bs-theme="dark"] #sidebar ul.components li a,
+[data-bs-theme="dark"] #sidebar .sidebar-header a {
+    background-color: var(--tg-surface) !important;
+    border: 1px solid var(--tg-border);
+    color: #ffc107 !important;
+    font-weight: 700;
+}
+[data-bs-theme="dark"] #sidebar ul.components li a span:not(.badge),
+[data-bs-theme="dark"] #sidebar ul.components li a i,
+[data-bs-theme="dark"] #sidebar .sidebar-header a span:not(.rounded-circle),
+[data-bs-theme="dark"] #sidebar .sidebar-header a i {
+    color: #ffc107 !important;
+}
+[data-bs-theme="dark"] #sidebar ul.components li a:hover {
+    background-color: var(--tg-surface-2) !important;
+    border-color: #2f5441;
+}
+/* Menu yang sedang dibuka: diberi garis kuning agar mudah dikenali */
+[data-bs-theme="dark"] #sidebar ul.components li.active > a {
+    background-color: #1f3a2c !important;
+    border-color: #ffc107;
+}
