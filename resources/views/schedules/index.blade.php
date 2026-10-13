@@ -6,13 +6,10 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
         <div>
-            <span class="badge bg-success-subtle text-success mb-2">Manajemen Jadwal</span>
-            <h2 class="fw-bold text-dark mb-1">Jadwal & tempat; Agenda Kelas</h2>
-            <p class="text-muted mb-0">Atur dan pantau jadwal kegiatan belajar mengajar harian berdasarkan kelas dan waktu.</p>
+            <span class="badge bg-success-subtle text-success mb-2">Manajemen Presensi</span>
+            <h2 class="fw-bold text-dark mb-1">Presensi Sidik Jari</h2>
+            <p class="text-muted mb-0">Kelola dan unggah data laporan kehadiran siswa dari mesin absensi sekolah.</p>
         </div>
-        <a href="{{ route('schedules.create', ['hari' => $hari]) }}" class="btn btn-success rounded-3 px-4 py-2 fw-semibold">
-            <i class="bi bi-plus-lg me-1"></i> Tambah Jadwal Baru
-        </a>
     </div>
 
     @if (session('success'))
@@ -22,40 +19,37 @@
         </div>
     @endif
 
-    <!-- Filter -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <form method="GET" action="{{ route('schedules.index') }}" id="filterForm">
-                    <input type="hidden" name="hari" value="{{ $hari }}">
-                    <label class="form-label small text-muted fw-semibold">Filter Kelas</label>
-                    <select name="kelas" class="form-select rounded-3" onchange="this.form.submit()">
-                        <option value="">Semua Kelas</option>
-                        @foreach ($classes as $c)
-                            <option value="{{ $c }}" {{ $kelas === $c ? 'selected' : '' }}>{{ $c }}</option>
-                        @endforeach
-                    </select>
-                </form>
-            </div>
-            <div class="col-md-8">
-                <label class="form-label small text-muted fw-semibold">Filter Hari Efektif</label>
-                <div class="btn-group w-100" role="group">
-                    @foreach ($hariList as $h)
-                        <a href="{{ route('schedules.index', array_filter(['hari' => $h, 'kelas' => $kelas])) }}"
-                           class="btn {{ $hari === $h ? 'btn-success' : 'btn-outline-success' }}">{{ $h }}</a>
-                    @endforeach
-                </div>
-            </div>
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    @endif
+
+    <!-- Card Form Import -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3">Unggah File Laporan Mesin Absensi</h5>
+        <form action="{{ route('attendances.import') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-3">
+                <label for="file_excel" class="form-label small text-muted fw-semibold">Pilih File (.csv / .xlsx)</label>
+                <input class="form-control rounded-3" type="file" id="file_excel" name="file_excel" accept=".csv, .xlsx, .xls" required>
+            </div>
+            <button type="submit" class="btn btn-success rounded-3 px-4 py-2 fw-semibold">
+                <i class="bi bi-upload me-2"></i> Unggah & Proses Data
+            </button>
+        </form>
     </div>
 
-    <!-- Tabel Data Jadwal -->
+    <!-- Tabel Log Presensi -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="p-4 border-bottom bg-light-subtle d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0">
-                Daftar Pelajaran • {{ $hari }}{{ $kelas ? ' • ' . $kelas : '' }}
-            </h5>
-            <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill">Total: {{ $schedules->count() }} Sesi</span>
+            <h5 class="fw-bold text-dark mb-0">Daftar Kehadiran Siswa Terakhir</h5>
+            <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill">Total: {{ isset($attendances) ? $attendances->count() : 0 }} Data</span>
         </div>
 
         <div class="table-responsive">
@@ -63,49 +57,34 @@
                 <thead class="table-light text-secondary small text-uppercase">
                     <tr>
                         <th class="ps-4 py-3" style="width: 5%;">No</th>
-                        <th class="py-3" style="width: 12%;">Hari</th>
-                        <th class="py-3" style="width: 20%;">Jam Pelajaran</th>
-                        <th class="py-3" style="width: 31%;">Mata Pelajaran</th>
-                        <th class="py-3" style="width: 17%;">Kelas &amp; Ruang</th>
-                        <th class="pe-4 py-3 text-end" style="width: 15%;">Aksi</th>
+                        <th class="py-3" style="width: 25%;">Nama Siswa</th>
+                        <th class="py-3" style="width: 15%;">Kelas</th>
+                        <th class="py-3" style="width: 20%;">Jam Masuk</th>
+                        <th class="py-3" style="width: 15%;">Status</th>
+                        <th class="pe-4 py-3 text-end" style="width: 20%;">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($schedules as $i => $s)
-                    <tr>
-                        <td class="ps-4 fw-bold text-secondary">{{ $i + 1 }}</td>
-                        <td><span class="badge bg-success-subtle text-success px-2 py-1">{{ $s->hari }}</span></td>
-                        <td>
-                            <span class="fw-bold text-dark d-block">{{ substr($s->jam_mulai, 0, 5) }} - {{ substr($s->jam_selesai, 0, 5) }}</span>
-                        </td>
-                        <td>
-                            <h6 class="fw-bold text-dark mb-0">{{ $s->subject->nama_mapel ?? '-' }}</h6>
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-dark d-block">{{ $s->kelas }}</span>
-                            <span class="text-muted small">{{ $s->ruangan }}</span>
-                        </td>
-                        <td class="pe-4 text-end">
-                            <a href="{{ route('schedules.edit', $s) }}" class="btn btn-sm btn-light border text-primary me-1" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{{ route('schedules.destroy', $s) }}" method="POST" class="d-inline"
-                                  onsubmit="return confirm('Hapus jadwal {{ $s->subject->nama_mapel ?? '' }} ({{ $s->kelas }})?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-light border text-danger" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
-                            Belum ada jadwal untuk hari {{ $hari }}{{ $kelas ? ' di kelas ' . $kelas : '' }}.
-                        </td>
-                    </tr>
-                    @endforelse
+                    @isset($attendances)
+                        @forelse ($attendances as $i => $att)
+                        <tr>
+                            <td class="ps-4 fw-bold text-secondary">{{ $i + 1 }}</td>
+                            <td><h6 class="fw-bold text-dark mb-0">{{ $att->student->nama ?? '-' }}</h6></td>
+                            <td><span class="text-muted">{{ $att->student->kelas ?? '-' }}</span></td>
+                            <td><span class="fw-semibold text-dark">{{ $att->jam_masuk ?? '-' }}</span></td>
+                            <td>
+                                <span class="badge bg-success-subtle text-success px-2 py-1">{{ $att->status }}</span>
+                            </td>
+                            <td class="pe-4 text-end text-muted small">{{ $att->keterangan ?? '-' }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                Belum ada data presensi sidik jari yang diimpor.
+                            </td>
+                        </tr>
+                        @endforelse
+                    @endisset
                 </tbody>
             </table>
         </div>
