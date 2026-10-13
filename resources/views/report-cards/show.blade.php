@@ -35,17 +35,18 @@
                         <td class="fw-bold text-dark">: {{ $student->nama_lengkap ?? $student->name }}</td>
                     </tr>
                     <tr>
-                        <td class="text-muted fw-medium ps-0">Nomor Induk (NIS)</td>
-                        <td>: {{ $student->nis ?? '-' }}</td>
+                        <td class="text-muted fw-medium ps-0">Nomor Induk (NISN)</td>
+                        <td>: {{ $student->nisn?? '-' }}</td>
                     </tr>
                 </table>
             </div>
             <div class="col-md-6">
-                <table class="table table-borderless mb-0">
-                    <tr>
-                        <td class="text-muted fw-medium ps-0" style="width: 140px;">Kelas</td>
-                        <td class="fw-bold text-dark">: {{ $student->kelas->nama_kelas ?? '-' }}</td>
-                    </tr>
+    <table class="table table-borderless mb-0">
+        <tr>
+            <td class="text-muted fw-medium ps-0" style="width: 140px;">Kelas</td>
+            <!-- Ubah dari relasi ke kolom langsung $student->class -->
+            <td class="fw-bold text-dark">: {{ $student->class ?? '-' }}</td>
+        </tr>
                     <tr>
                         <td class="text-muted fw-medium ps-0">Tahun Ajaran</td>
                         <td>: 2025/2026 (Semester Ganjil)</td>

@@ -17,32 +17,34 @@
                     <thead class="table-light text-uppercase fs-7 text-secondary">
                         <tr>
                             <th class="ps-4">No</th>
-                            <th>NIS</th>
+                            <th>nisn</th>
                             <th>Nama Lengkap</th>
                             <th>Kelas</th>
                             <th class="text-center" style="width: 180px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($students as $index => $student)
-                        <tr>
-                            <td class="ps-4 fw-semibold text-secondary">{{ $index + 1 }}</td>
-                            <td><code>{{ $student->nis ?? '-' }}</code></td>
-                            <td class="fw-bold text-dark">{{ $student->nama_lengkap ?? $student->name }}</td>
-                            <td>{{ $student->kelas->nama_kelas ?? 'Kelas Belum Diatur' }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('report-cards.show', $student->id) }}" class="btn btn-sm btn-success px-3 rounded-pill shadow-sm">
-                                    <i class="bi bi-file-earmark-text me-1"></i> Buka Raport
-                                </a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">
-                                Belum ada data siswa yang tersedia untuk dicetak raportnya.
-                            </td>
-                        </tr>
-                        @endforelse
+                       @forelse($students as $index => $student)
+    <tr>
+        <td class="ps-4 fw-semibold text-secondary">{{ $students->firstItem() + $index }}</td>
+        <!-- Ubah dari $student->nis menjadi $student->nisn -->
+        <td><code>{{ $student->nisn ?? '-' }}</code></td>
+        <td class="fw-bold text-dark">{{ $student->nama_lengkap ?? $student->name }}</td>
+        <!-- Ubah dari relasi kelas ke kolom langsung $student->class -->
+        <td>{{ $student->class ?? 'Kelas Belum Diatur' }}</td>
+        <td class="text-center">
+            <a href="{{ route('report-cards.show', $student->id) }}" class="btn btn-sm btn-success px-3 rounded-pill shadow-sm">
+    <i class="bi bi-file-earmark-text me-1"></i> Buka Raport
+            </a>
+        </td>
+    </tr>
+@empty
+    <tr>
+        <td colspan="5" class="text-center py-5 text-muted">
+            Belum ada data siswa yang tersedia untuk dicetak raportnya.
+        </td>
+    </tr>
+@endforelse
                     </tbody>
                 </table>
             </div>
