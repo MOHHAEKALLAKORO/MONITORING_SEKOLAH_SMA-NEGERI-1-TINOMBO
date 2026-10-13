@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Grade;
-use App\Models\Subject; // Pastikan model Subject di-import
+use App\Models\Subject;
+use App\Models\AcademicYear; // Tambahkan import AcademicYear di sini
 
 class AcademicController extends Controller
 {
@@ -52,8 +53,11 @@ class AcademicController extends Controller
 
     public function create()
     {
-        return view('academic.create', [
-            'students' => Student::orderBy('id')->get() 
-        ]);
+        // Mengambil data siswa, mata pelajaran, dan tahun ajaran untuk form input nilai
+        $students = Student::orderBy('id')->get();
+        $subjects = Subject::orderBy('id')->get();
+        $academicYears = AcademicYear::orderBy('id', 'desc')->get();
+
+        return view('academic.create', compact('students', 'subjects', 'academicYears'));
     }
 }
