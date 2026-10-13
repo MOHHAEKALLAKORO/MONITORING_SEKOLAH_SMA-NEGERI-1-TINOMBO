@@ -94,6 +94,10 @@ Route::resource('jadwal', ScheduleController::class)
     ->except('show')
     ->names('schedules')
     ->parameters(['jadwal' => 'schedule']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::post('/attendances/import', [AttendanceController::class, 'import'])->name('attendances.import');
+});
 // Rute tambahan untuk mendukung akses /attendances
 Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.list');
 // Rute untuk Menu Baru di Sidebar (Halaman Sementara/Placeholder)
@@ -150,3 +154,4 @@ Route::get('/raport-semester/{id}', [ReportCardController::class, 'show'])->name
 Route::get('/pengaturan', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/pengaturan-akun', [ProfileController::class, 'index']);
 Route::post('/pengaturan', [ProfileController::class, 'update'])->name('profile.update');
+
