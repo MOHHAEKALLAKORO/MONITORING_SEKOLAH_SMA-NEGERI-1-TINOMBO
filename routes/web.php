@@ -17,7 +17,7 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Controllers\HomeroomController;
-
+use App\Http\Controllers\WhatsAppController;
 // --- Login / Logout ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -111,13 +111,17 @@ Route::get('/laporan-bulanan', [ReportController::class, 'index']);
 // --- Log WhatsApp ---
 Route::get('/log-whatsapp', [WhatsAppLogController::class, 'index'])->name('whatsapp.logs');
 Route::post('/log-whatsapp', [WhatsAppLogController::class, 'store'])->name('whatsapp.logs.store');
+Route::get('/report-cards/{id}/send-wa', [ReportCardController::class, 'sendWhatsApp'])->name('report-cards.send-wa');
 
 // --- Raport ---
 Route::get('/raport', [ReportCardController::class, 'index'])->name('report-cards.index');
 Route::get('/raport-semester', [ReportCardController::class, 'index']);
 Route::get('/raport-semester/{id}', [ReportCardController::class, 'show'])->name('report-cards.show');
+Route::get('/report-cards/{id}/send-wa', [ReportCardController::class, 'sendWhatsApp'])->name('report-cards.send-wa');
 
 // --- Pengaturan Akun ---
 Route::get('/pengaturan', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/pengaturan-akun', [ProfileController::class, 'index']);
 Route::post('/pengaturan', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('/test-wa', [WhatsAppController::class, 'sendWhatsAppNotification']);
+Route::get('/kirim-wa', [WhatsAppController::class, 'kirimPesanWhatsApp']);

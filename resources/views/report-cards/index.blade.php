@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       @forelse($students as $index => $student)
+    @forelse($students as $index => $student)
     <tr>
         <td class="ps-4 fw-semibold text-secondary">{{ $students->firstItem() + $index }}</td>
         <!-- Ubah dari $student->nis menjadi $student->nisn -->
@@ -34,9 +34,12 @@
         <td>{{ $student->class ?? 'Kelas Belum Diatur' }}</td>
         <td class="text-center">
             <a href="{{ route('report-cards.show', $student->id) }}" class="btn btn-sm btn-success px-3 rounded-pill shadow-sm">
-    <i class="bi bi-file-earmark-text me-1"></i> Buka Raport
+                <i class="bi bi-file-earmark-text me-1"></i> Buka Raport
+          <a href="{{ route('report-cards.send-wa', $student->id) }}" class="btn btn-success btn-sm">
+                <i class="fab fa-whatsapp"></i> Kirim WA
             </a>
-        </td>
+       </td>
+        
     </tr>
 @empty
     <tr>

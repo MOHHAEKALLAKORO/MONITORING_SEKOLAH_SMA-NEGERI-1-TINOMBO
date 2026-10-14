@@ -2,8 +2,6 @@
 
 return [
 
-    'fonnte' => [
-        'token' => env('FONNTE_TOKEN'),
-    ],
+    'url' => env('WA_GATEWAY_URL', 'http://localhost:3000'),
 
 ];

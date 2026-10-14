@@ -36,6 +36,7 @@ class StudentController extends Controller
             'nisn'  => 'required|unique:students,nisn',
             'name'  => 'required|string|max:255',
             'class' => 'required|string',
+            'parent_phone'  => 'required|string|max:20',
         ]);
 
         Student::create($data);

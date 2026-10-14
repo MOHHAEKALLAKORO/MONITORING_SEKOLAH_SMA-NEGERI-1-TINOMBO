@@ -15,6 +15,7 @@ class Attendance extends Model
     protected $fillable = [
         'student_id',
         'tanggal',
+        'date',          // salinan tanggal (kolom ini wajib & bawaannya hari ini)
         'status',
         'keterangan',
     ];

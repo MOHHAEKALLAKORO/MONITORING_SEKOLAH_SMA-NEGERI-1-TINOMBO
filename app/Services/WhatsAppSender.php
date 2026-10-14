@@ -5,38 +5,31 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 
 /**
- * Pengirim WhatsApp lewat Fonnte (https://docs.fonnte.com).
- * Token disimpan di .env sebagai FONNTE_TOKEN.
+ * Pengirim WhatsApp lewat Gateway Lokal (Baileys / Node.js).
  */
 class WhatsAppSender
 {
     /** @return array{ok: bool, reason: ?string} */
     public function send(string $phone, string $message): array
     {
-        $token = config('services.fonnte.token');
-
-        if (!$token) {
-            return ['ok' => false, 'reason' => 'FONNTE_TOKEN belum diisi di file .env'];
-        }
-
         try {
-            $response = Http::withHeaders(['Authorization' => $token])
-                ->asForm()
-                ->timeout(20)
-                ->post('https://api.fonnte.com/send', [
-                    'target'  => $this->normalize($phone),
+            // Mengirim request ke gateway lokal Node.js (port 3000)
+            $response = Http::timeout(20)
+                ->post('http://localhost:3000/send-message', [
+                    'phone'   => $this->normalize($phone),
                     'message' => $message,
                 ]);
 
             $json = $response->json() ?? [];
 
+            // Memeriksa respons sukses dari gateway lokal
             if ($response->successful() && ($json['status'] ?? false) === true) {
                 return ['ok' => true, 'reason' => null];
             }
 
-            return ['ok' => false, 'reason' => $json['reason'] ?? ('HTTP ' . $response->status())];
+            return ['ok' => false, 'reason' => $json['message'] ?? $json['reason'] ?? ('HTTP ' . $response->status())];
         } catch (\Throwable $e) {
-            return ['ok' => false, 'reason' => $e->getMessage()];
+            return ['ok' => false, 'reason' => 'Server WhatsApp Gateway (Node.js) belum menyala: ' . $e->getMessage()];
         }
     }
 

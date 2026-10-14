@@ -120,7 +120,7 @@
             </div>
             <div class="modal-body">
                 <<div class="alert alert-info small">
-                    Pesan akan dikirim ke nomor tujuan lewat layanan WhatsApp (Fonnte). Untuk uji coba, gunakan <strong>nomor Anda sendiri</strong>.
+                   Pesan akan dikirim ke nomor tujuan lewat layanan WhatsApp Gateway Lokal. Untuk uji coba, gunakan <strong>nomor Anda sendiri</strong>.
             </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Nama Penerima</label>

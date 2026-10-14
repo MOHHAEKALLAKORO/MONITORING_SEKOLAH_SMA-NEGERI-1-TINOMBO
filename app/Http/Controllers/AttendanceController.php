@@ -48,10 +48,14 @@ class AttendanceController extends Controller
         // Satu siswa hanya punya satu catatan per tanggal (kalau sudah ada, diperbarui)
         Attendance::updateOrCreate(
             ['student_id' => $data['student_id'], 'tanggal' => $data['tanggal']],
-            ['status' => $data['status'], 'keterangan' => $data['keterangan'] ?? null]
+            [
+                'status'     => $data['status'],
+                'keterangan' => $data['keterangan'] ?? null,
+                'date'       => $data['tanggal'],   // kolom `date` dijaga sama dengan `tanggal`
+            ]
         );
 
-        return redirect()->route('attendances.index')
+        return redirect()->route('presensi.index', ['tanggal' => $data['tanggal']])
             ->with('success', 'Presensi berhasil disimpan!');
     }
 
@@ -67,9 +71,9 @@ class AttendanceController extends Controller
     public function update(Request $request, Attendance $attendance)
     {
         $data = $this->validated($request);
-        $attendance->update($data);
+        $attendance->update($data + ['date' => $data['tanggal']]);
 
-        return redirect()->route('attendances.index')
+        return redirect()->route('presensi.index', ['tanggal' => $data['tanggal']])
             ->with('success', 'Presensi berhasil diperbarui!');
     }
 
@@ -78,7 +82,7 @@ class AttendanceController extends Controller
         $tanggal = $attendance->tanggal?->format('Y-m-d');
         $attendance->delete();
 
-        return redirect()->route('attendances.index', ['tanggal' => $tanggal])
+        return redirect()->route('presensi.index', ['tanggal' => $tanggal])
             ->with('success', 'Presensi berhasil dihapus!');
     }
 
